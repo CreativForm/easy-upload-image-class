@@ -100,7 +100,7 @@ ALL RESULTS ARRAY VALUES
 This object return array of all information about uploaded function.
 
 **Global returns**
-- **results['return']** BOOLEAN return true if upload is completed of false if error occurs
+- **results['return']** BOOLEAN return true if upload is completed or false if error occurs
 - **results['message']** returns all informations and errors from upload
 
 **Return ony if upload is successful**
