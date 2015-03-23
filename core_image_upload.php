@@ -1,6 +1,6 @@
 <?php
 /**********************************************************
- * EASY UPLOAD IMAGE CLASS v1.0.5 (http://creativform.com)
+ * EASY UPLOAD IMAGE CLASS v1.0.6 (http://creativform.com)
  * created: 12/25/2014 12:00 (EST)
  * Copyright 2014 CreativForm.com
  * Created by: Ivijan-Stefan Stipic (creativform@gmail.com)
@@ -126,9 +126,11 @@ class uploadImage
 				$this->file			=	$_FILES[$option['input_name']];
 				$this->option		=	$option;
 				@$this->ext			=	strtolower(end(explode(".",implode("",explode("\\",$_FILES[$option['input_name']]['name'])))));
+				$this->mk_directory();
 				// Public
 				$this->size			=	$this->size();
 				$this->extension	=	$this->extension();
+				// make directory if not exists
 				// Functions
 				$this->results 		= $this->upload();
 			}
@@ -324,18 +326,11 @@ class uploadImage
 				{
 					$newName=$this->set_name($rename).'.'.$this->ext;
 				}
-				// make directory in not exist
-				if (!file_exists($this->option['location']) && !is_dir($this->option['location'])) {
-					@mkdir($this->option['location'], 0766, true);
-				}
-				// make empty index.htm if not exist
-				if (!file_exists($this->option['location'].'index.htm') && !is_file($this->option['location'].'index.htm')) {
-					$file_html = @fopen($this->option['location'].'index.htm','w');
-					@fclose($file_html);
-				}
 				$location = NULL;
 				if (file_exists($this->option['location'].$newName))
 				{
+					@imagedestroy($src);
+					@imagedestroy($tmp);
 					return array(
 						'return'=>false,
 						'message'=>$newName . " already exists. ",
@@ -349,26 +344,7 @@ class uploadImage
 				switch ($this->ext)
 				{
 					case "png":
-						if($this->option['quality']<10)
-							$quality=0;
-						if($this->option['quality']>=10 && $this->option['quality']<20)
-							$quality=1;
-						if($this->option['quality']>=20 && $this->option['quality']<30)
-							$quality=2;
-						if($this->option['quality']>=30 && $this->option['quality']<40)
-							$quality=3;
-						if($this->option['quality']>=40 && $this->option['quality']<50)
-							$quality=4;
-						if($this->option['quality']>=50 && $this->option['quality']<60)
-							$quality=5;
-						if($this->option['quality']>=60 && $this->option['quality']<70)
-							$quality=6;
-						if($this->option['quality']>=70 && $this->option['quality']<80)
-							$quality=7;
-						if($this->option['quality']>=80 && $this->option['quality']<90)
-							$quality=8;
-						if($this->option['quality']>90)
-							$quality=9;
+						$quality = round(9 - $this->option['quality'] / 11.11);
 						@imagepng($tmp,$location,$quality);
 					break;
 					case "gif":
@@ -386,7 +362,7 @@ class uploadImage
 				@imagedestroy($tmp);
 				return array(
 					'return'	=>	true,
-					'message'	=>	"You successful upload image!",
+					'message'	=>	"You successfuly upload image!",
 					'name'		=>	$newName,
 					'location'	=>	$location,
 					'quality'	=>	$quality,
@@ -413,6 +389,20 @@ class uploadImage
 		$content = preg_replace($exist,$replace,$content);
 		return strtolower(trim($content));
 	}
+	## setup directory
+	private function mk_directory()
+	{
+		// make directory in not exist
+		if (!file_exists($this->option['location']) && !is_dir($this->option['location'])) {
+			@mkdir($this->option['location'], 0766, true);
+		}
+		// make empty index.htm if not exist
+		if (!file_exists($this->option['location'].'index.htm') && !is_file($this->option['location'].'index.htm')) {
+			$file_html = @fopen($this->option['location'].'index.htm','w');
+			@fclose($file_html);
+		}
+	}
+	## encode image name
 	protected function encode($string)
 	{
 		return strtolower(
