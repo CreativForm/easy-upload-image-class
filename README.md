@@ -2,6 +2,9 @@ Easy upload image class
 =======================
 This class provides a quick, easy and safe access to images for upload with the possibility of changing the size and quality of JPG, JPEG, GIF, PNG and BMP type of photos or images. You only need to make some setup and everything continues to work automaticly.
 
+Tutorial:
+http://www.blog.creativform.com/simple-class-for-image-upload/
+
 SETUP AND USING
 =======================
 ```
